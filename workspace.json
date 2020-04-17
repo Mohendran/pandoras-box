@@ -1,8 +1,214 @@
 {
   "version": 1,
-  "projects": {},
+  "projects": {
+    "cerebrus-server": {
+      "root": "apps/cerebrus-server",
+      "sourceRoot": "apps/cerebrus-server/src",
+      "projectType": "application",
+      "prefix": "cerebrus-server",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:build",
+          "options": {
+            "outputPath": "dist/apps/cerebrus-server",
+            "main": "apps/cerebrus-server/src/main.ts",
+            "tsConfig": "apps/cerebrus-server/tsconfig.app.json",
+            "assets": ["apps/cerebrus-server/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/cerebrus-server/src/environments/environment.ts",
+                  "with": "apps/cerebrus-server/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "cerebrus-server:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/cerebrus-server/tsconfig.app.json",
+              "apps/cerebrus-server/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/cerebrus-server/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/cerebrus-server/jest.config.js",
+            "tsConfig": "apps/cerebrus-server/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "cerebrus-client": {
+      "projectType": "application",
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/cerebrus-client",
+      "sourceRoot": "apps/cerebrus-client/src",
+      "prefix": "pandoras-box",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/cerebrus-client",
+            "index": "apps/cerebrus-client/src/index.html",
+            "main": "apps/cerebrus-client/src/main.ts",
+            "polyfills": "apps/cerebrus-client/src/polyfills.ts",
+            "tsConfig": "apps/cerebrus-client/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "apps/cerebrus-client/src/favicon.ico",
+              "apps/cerebrus-client/src/assets"
+            ],
+            "styles": ["apps/cerebrus-client/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/cerebrus-client/src/environments/environment.ts",
+                  "with": "apps/cerebrus-client/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "cerebrus-client:build",
+            "proxyConfig": "apps/cerebrus-client/proxy.conf.json"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "cerebrus-client:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "cerebrus-client:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/cerebrus-client/tsconfig.app.json",
+              "apps/cerebrus-client/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/cerebrus-client/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/cerebrus-client/jest.config.js",
+            "tsConfig": "apps/cerebrus-client/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "apps/cerebrus-client/src/test-setup.ts"
+          }
+        }
+      }
+    },
+    "cerebrus-client-e2e": {
+      "root": "apps/cerebrus-client-e2e",
+      "sourceRoot": "apps/cerebrus-client-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/cerebrus-client-e2e/cypress.json",
+            "tsConfig": "apps/cerebrus-client-e2e/tsconfig.e2e.json",
+            "devServerTarget": "cerebrus-client:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "cerebrus-client:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/cerebrus-client-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/cerebrus-client-e2e/**"]
+          }
+        }
+      }
+    },
+    "types": {
+      "root": "libs/types",
+      "sourceRoot": "libs/types/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/types/tsconfig.lib.json",
+              "libs/types/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/types/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/types/jest.config.js",
+            "tsConfig": "libs/types/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
+    }
+  },
   "cli": {
-    "defaultCollection": "@nrwl/workspace"
+    "defaultCollection": "@nrwl/angular"
   },
   "schematics": {
     "@nrwl/workspace": {
@@ -58,6 +264,14 @@
       "library": {
         "linter": "eslint"
       }
+    },
+    "@nrwl/angular:application": {
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "unitTestRunner": "jest"
     }
-  }
+  },
+  "defaultProject": "cerebrus-ui"
 }

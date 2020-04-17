@@ -18,5 +18,19 @@
       }
     }
   },
-  "projects": {}
+  "projects": {
+    "cerebrus-server": {
+      "tags": []
+    },
+    "cerebrus-client": {
+      "tags": []
+    },
+    "cerebrus-client-e2e": {
+      "tags": [],
+      "implicitDependencies": ["cerebrus-client"]
+    },
+    "types": {
+      "tags": []
+    }
+  }
 }
